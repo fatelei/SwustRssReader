@@ -1,0 +1,19 @@
+.sidebar {
+    float: left;
+    width: 46%;
+    text-align: left;
+    background: none;
+}
+
+.main {
+    float: right;
+    width: 46%; 
+}
+
+ul {
+    list-style: none;
+}
+
+body {
+    font-size: 10px;
+}

@@ -1,0 +1,9 @@
+.navbar-inner {
+    background-color: #97D3BB;
+    background-image: -webkit-liner-gradient(top, #C6F8F0, #75D9DD);
+    background-image: -webkit-gradient(linear, 0 0,0 100%, from(#C6F8F0), to(#75D9DD));
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: rgba(160, 160, 160, 0.3) !important;
+}

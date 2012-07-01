@@ -1,0 +1,13 @@
+.navbar-inner {
+    background-color: #FAA97B;
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#F89121),to(#EE8705));
+    background-image: -webkit-liner-gradient(top, #F89121, #EE8705);
+}
+
+.brand {
+    color: #FFF;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: rgba(0, 255, 20, 0.22) !important;
+}

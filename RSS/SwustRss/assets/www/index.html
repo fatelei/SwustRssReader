@@ -1,0 +1,432 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Rss Reader</title>
+        <meta charset="gb2312"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" charset="UTF-8" src="js/cordova-1.8.1.js">
+        </script>
+        <script type="text/javascript" charset="UTF-8" src="js/jquery-1.7.2.min.js">
+        </script>
+        <script type="text/javascript" charset="UTF-8" src="js/bootstrap.min.js">
+        </script>
+        <script type="text/javascript" charset="gb2312" src="js/check_network.js">
+        </script>
+        <script type="text/javascript" charset="gb2312" src="js/rss.js">
+        </script>
+        <script type="text/javascript" charset="UTF-8" src="js/lawnchair-0.6.1.min.js">
+        </script>
+        <script type="text/javascript" charset="gb2312" src="js/db.js">
+        </script>
+        <link type="text/css" charset="UTF-8" href="css/bootstrap.min.css" rel="stylesheet"/>
+        <link type="text/css" charset="UTF-8" href="css/bootstrap-responsive.min.css" rel="stylesheet">
+        <script type="text/javascript">
+            var db = new DB();
+            if (db.open_database()){
+                var obj = db.get_config('cfg');
+                if ((undefined != obj) || (false != obj) || (null != obj)) {
+                    switch (obj.value.skin) {
+                        case 1:
+                            break;
+                        case 2:
+                            document.write('<link type="text/css" href="css/blue.css" rel="stylesheet"/>');
+                            break;
+                        case 3:
+                            document.write('<link type="text/css" href="css/red.css" rel="stylesheet"/>');
+                            break;
+                    }
+                }
+            }
+        </script>
+        <script type="text/javascript" charset="gb2312" src="js/config.js">
+        </script>
+        <script type="text/javascript" charset="UTF-8">
+            document.addEventListener("deviceready", onDeviceReady, false);
+            function onDeviceReady() {
+                if (check_connection()) {
+                    get_my_subscribe();
+                } else {
+                    window.location.href = 'error.html';
+                }
+            }
+        </script>
+        <link type="text/css" charset="UTF-8" href="css/base.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="#">
+                        RSS-Reader
+                    </a>
+                    <div>
+                        <ul class="nav nav-pills" id="nav_rss">
+                        </ul>
+                    </div>
+                    <div id="op" class="btn-group pull-right">
+                        <a class="btn" href="#" id="back">
+                            <i class="icon-arrow-left">
+                            </i>
+                        </a>
+                        <a class="btn" href="#" id="forward">
+                            <i class="icon-arrow-right">
+                            </i>
+                        </a>
+                        <a class="btn" href="config.html">设置
+                            <i class="icon-wrench">
+                            </i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div style="float: left;width:26%">
+                    <div class="well sidebar-nav">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">RSS列表</li>
+                            <li><a href="#" onclick="get_wangyi_rss();">网易RSS</a></li>
+                            <li><a href="#" onclick="get_sohu_rss();">搜狐RSS</a></li>
+                        </ul>
+                    </div>
+                    <div class="well sidebar-nav">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">我的订阅</li>
+                            <div class="accordion" id="wangyiaccordion">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="wangyiaccordion" href="#wangyisub">
+                                                                                                                                网易订阅
+                                        </a>
+                                    </div>
+                                    <div id="wangyisub" class="accordion-body collapse">
+                                        <ul id="mywysub" style="margin-left: 0px;">
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyxw">
+                                                                                                                                                                                新闻
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyxw" class="accordion-body collapse">
+                                                        <ul id="mywyxwsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyty">
+                                                                                                                                                                                体育
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyty" class="accordion-body collapse">
+                                                        <ul id="mywytysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyyy">
+                                                                                                                                                                                亚运
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyyy" class="accordion-body collapse">
+                                                        <ul id="mywyyysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyyl">
+                                                                                                                                                                                娱乐
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyyl" class="accordion-body collapse">
+                                                        <ul id="mywyylsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wysp">
+                                                                                                                                                                                视频
+                                                        </a>
+                                                    </div>
+                                                    <div id="wysp" class="accordion-body collapse">
+                                                        <ul id="mywyspsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wykj">
+                                                                                                                                                                                科技
+                                                        </a>
+                                                    </div>
+                                                    <div id="wykj" class="accordion-body collapse">
+                                                        <ul id="mywykjsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wycj">
+                                                                                                                                                                                财经
+                                                        </a>
+                                                    </div>
+                                                    <div id="wycj" class="accordion-body collapse">
+                                                        <ul id="mywycjsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyjc">
+                                                                                                                                                                                汽车
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyjc" class="accordion-body collapse">
+                                                        <ul id="mywyjcsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wysm">
+                                                                                                                                                                                数码
+                                                        </a>
+                                                    </div>
+                                                    <div id="wysm" class="accordion-body collapse">
+                                                        <ul id="mywysmsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wysj">
+                                                                                                                                                                                手机
+                                                        </a>
+                                                    </div>
+                                                    <div id="wysj" class="accordion-body collapse">
+                                                        <ul id="mywysjsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wynx">
+                                                                                                                                                                                女性
+                                                        </a>
+                                                    </div>
+                                                    <div id="wynx" class="accordion-body collapse">
+                                                        <ul id="mywynxsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyfc">
+                                                                                                                                                                                房产
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyfc" class="accordion-body collapse">
+                                                        <ul id="mywyfcsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyyx">
+                                                                                                                                                                                游戏
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyyx" class="accordion-body collapse">
+                                                        <ul id="mywyyxsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyds">
+                                                                                                                                                                                读书
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyds" class="accordion-body collapse">
+                                                        <ul id="mywydssub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wymt">
+                                                                                                                                                                                媒体
+                                                        </a>
+                                                    </div>
+                                                    <div id="wymt" class="accordion-body collapse">
+                                                        <ul id="mywymtsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wygy">
+                                                                                                                                                                                公益
+                                                        </a>
+                                                    </div>
+                                                    <div id="wygy" class="accordion-body collapse">
+                                                        <ul id="mywygysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyxy">
+                                                                                                                                                                                校园
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyxy" class="accordion-body collapse">
+                                                        <ul id="mywyxysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyly">
+                                                                                                                                                                                旅游
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyly" class="accordion-body collapse">
+                                                        <ul id="mywylysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyjy">
+                                                                                                                                                                                教育
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyjy" class="accordion-body collapse">
+                                                        <ul id="mywyjysub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wylt">
+                                                                                                                                                                                论坛
+                                                        </a>
+                                                    </div>
+                                                    <div id="wylt" class="accordion-body collapse">
+                                                        <ul id="mywyltsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wybk">
+                                                                                                                                                                                博客
+                                                        </a>
+                                                    </div>
+                                                    <div id="wybk" class="accordion-body collapse">
+                                                        <ul id="mywybksub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">
+                                                        <a class="accordion-toggle" data-toggle="collapse" href="#wyyix">
+                                                                                                                                                                                营销
+                                                        </a>
+                                                    </div>
+                                                    <div id="wyyix" class="accordion-body collapse">
+                                                        <ul id="mywyyixsub" style="margin-left: 0px;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion" id="sohuaccordion">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="sohuaccordion" href="#sohusub">
+                                                                                                                                搜狐订阅
+                                        </a>
+                                    </div>
+                                    <div id="sohusub" class="accordion-body collapse">
+                                        <ul id="myshsub" style="margin-left: 0px;">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <div style="float: right; width:70%;">
+                    <div class="hero-unit" id="main_content" style="padding-top: 30px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if (history.length == 1) {
+                    $('#forward').attr('disabled', true);
+                    $('#back').attr('disabled', true);
+                } else {
+                    $('#forward').bind('click', function() {
+                        history.forward();
+                        return false;   
+                    });
+                    $('#back').attr('disabled', true);
+                }
+            });
+        </script>
+    </body>
+</html>
